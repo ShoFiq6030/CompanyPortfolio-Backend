@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const NavModel = require('../models/NavModal');
+const { verifyToken } = require("../middleware/tokenVerify");
 
 
 router.get("/", async (req, res) => {
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
 
 })
 
-router.put("/update", async (req, res) => {
+router.put("/update", verifyToken, async (req, res) => {
     try {
 
         if (Object.keys(req.body).length === 0) {
@@ -38,7 +39,7 @@ router.put("/update", async (req, res) => {
     }
 });
 
-router.delete("/delete", async (req, res) => {
+router.delete("/delete", verifyToken, async (req, res) => {
     try {
         await NavModel.deleteMany({});
         res.status(204).send();
