@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
+
 const footerModel = require('../models/footer');
+const { verifyToken } = require("../middleware/tokenVerify");
 
 
-router.get("/footer", async (req, res) => {
+router.get("/get-footer", async (req, res) => {
     try {
         const footer = await footerModel.findOne({});
         res.status(200).json(footer);
@@ -13,7 +15,7 @@ router.get("/footer", async (req, res) => {
     }
 })
 
-router.patch("/footer", async (req, res) => {
+router.put("/update-footer", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });

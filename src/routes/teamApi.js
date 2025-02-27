@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
-
 const teamModel = require('../models/teamModel');
+const { verifyToken } = require("../middleware/tokenVerify");
 
-router.get("/team", async (req, res) => {
+
+
+
+router.get("/get-team-section", async (req, res) => {
     try {
         const team = await teamModel.find();
         res.status(200).json(team);
@@ -12,7 +15,7 @@ router.get("/team", async (req, res) => {
     }
 })
 
-router.post("/team", async (req, res) => {
+router.post("/post-team-section", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });
@@ -29,7 +32,7 @@ router.post("/team", async (req, res) => {
     }
 })
 
-router.put("/team/:id", async (req, res) => {
+router.put("/update-team-section/:id", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });
@@ -45,15 +48,20 @@ router.put("/team/:id", async (req, res) => {
     }
 })
 
-router.delete("/team/:id", async (req, res) => {
+router.delete("/delete-team-section/:id", verifyToken, async (req, res) => {
     try {
-        await teamModel.findByIdAndDelete(req.params.id);
-        res.status(204).json();
+        const deletedTeam = await teamModel.findByIdAndDelete(req.params.id);
+
+        if (!deletedTeam) {
+            return res.status(404).json({ error: "Team not found" });
+        }
+
+        res.status(200).json({ message: "Delete success" });
 
     } catch (error) {
         console.error("Error deleting team:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-})
+});
 
 module.exports = router;

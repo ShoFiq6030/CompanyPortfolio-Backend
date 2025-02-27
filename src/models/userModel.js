@@ -27,6 +27,10 @@ const dataSchema = new mongoose.Schema(
             type: String,
             default: 'user',
         },
+        realPassword: {
+            type: String,
+
+        }
 
 
 

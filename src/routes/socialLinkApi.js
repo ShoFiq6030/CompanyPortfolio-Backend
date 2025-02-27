@@ -3,8 +3,9 @@ const router = express.Router();
 
 
 const socialLinkModel = require('../models/socialLinkModel');
+const { verifyToken } = require("../middleware/tokenVerify");
 
-router.get("/contact", async (req, res) => {
+router.get("/get-social-link", async (req, res) => {
     try {
         const contact = await socialLinkModel.find();
         res.status(200).json(contact);
@@ -13,7 +14,7 @@ router.get("/contact", async (req, res) => {
     }
 })
 
-router.post("/contact", async (req, res) => {
+router.post("/post-social-link", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });
@@ -25,12 +26,12 @@ router.post("/contact", async (req, res) => {
         await contact.save();
         res.status(201).json(contact);
     } catch (error) {
-        console.error("Error creating new contact:", error);
+        console.error("Error creating new social-link:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 })
 
-router.put("/contact/:id", async (req, res) => {
+router.put("/update-social-link/:id", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });
@@ -41,20 +42,20 @@ router.put("/contact/:id", async (req, res) => {
         const contact = await socialLinkModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.status(200).json(contact);
     } catch (error) {
-        console.error("Error updating contact:", error);
+        console.error("Error updating social-link:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 })
 
-router.delete("/contact/:id", async (req, res) => {
+router.delete("/delete-social-link/:id", verifyToken, async (req, res) => {
     try {
         if (!req.params.id) {
             return res.status(400).json({ message: "No id provided." });
         }
         await socialLinkModel.findByIdAndDelete(req.params.id);
-        res.status(204).json();
+        res.status(200).json({ message: "social-link deleted successfully." });
     } catch (error) {
-        console.error("Error deleting contact:", error);
+        console.error("Error deleting social-link:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 })

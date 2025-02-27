@@ -6,6 +6,7 @@ const teamRouter = require('./src/routes/teamApi')
 const partnersRouter = require('./src/routes/partnersApi')
 const socialLinkRouter = require('./src/routes/socialLinkApi')
 const userRouter = require('./src/routes/userApi')
+const footerRouter = require('./src/routes/footerApi')
 
 const app = express()
 const bodyParser = require('body-parser')
@@ -60,8 +61,9 @@ app.use("/api/v1/nav", navRouter)
 app.use("/api/v1/hero", heroRouter)
 app.use("/api/v1/team", teamRouter)
 app.use("/api/v1/partners", partnersRouter)
-app.use("/api/v1/socialLink", socialLinkRouter)
+app.use("/api/v1/social-link", socialLinkRouter)
 app.use("/api/v1/user", userRouter)
+app.use("/api/v1/footer", footerRouter)
 
 
 module.exports = app

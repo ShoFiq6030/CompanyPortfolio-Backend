@@ -39,14 +39,6 @@ router.put("/update", verifyToken, async (req, res) => {
     }
 });
 
-router.delete("/delete", verifyToken, async (req, res) => {
-    try {
-        await NavModel.deleteMany({});
-        res.status(204).send();
-    } catch (error) {
-        console.error("Error deleting navigation:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-})
+
 
 module.exports = router;

@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 
+
 const heroModel = require('../models/heroModel');
+const { verifyToken } = require("../middleware/tokenVerify");
 
 
-router.get("/hero", async (req, res) => {
+router.get("/get-hero-section", async (req, res) => {
     try {
         const hero = await heroModel.find();
         res.status(200).json(hero);
@@ -14,7 +16,7 @@ router.get("/hero", async (req, res) => {
     }
 })
 
-router.post("/hero", async (req, res) => {
+router.post("/add-hero-section", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });
@@ -31,7 +33,7 @@ router.post("/hero", async (req, res) => {
     }
 })
 
-router.put("/hero/:id", async (req, res) => {
+router.put("/update-hero-section/:id", verifyToken, async (req, res) => {
     try {
         if (typeof req.body !== "object") {
             return res.status(400).json({ message: "Invalid data format. Provide valid json" });
@@ -47,10 +49,10 @@ router.put("/hero/:id", async (req, res) => {
     }
 })
 
-router.delete("/hero/:id", async (req, res) => {
+router.delete("/delete-hero-section/:id", verifyToken, async (req, res) => {
     try {
-        await heroModel.findByIdAndDelete(req.params.id);
-        res.status(204).send();
+        const deleteData = await heroModel.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: "data delete successful." });
     } catch (error) {
         console.error("Error deleting hero:", error);
         res.status(500).json({ error: "Internal Server Error" });
