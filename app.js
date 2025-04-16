@@ -64,6 +64,7 @@ app.use("/api/v1/partners", partnersRouter)
 app.use("/api/v1/social-link", socialLinkRouter)
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/footer", footerRouter)
+app.use("/api/v1/package", require("./src/routes/packageAPI"))
 app.use("*", (req, res) => {
     res.status(404).json({ message: "API endpoint not found" })
 })
